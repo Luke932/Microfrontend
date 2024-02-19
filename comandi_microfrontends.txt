@@ -1,0 +1,47 @@
+"Creazione workspace mono-repo senza applicazione predefinita"
+
+ng new mono-workspace --create-application=false
+
+Successivamente creiamo più applicativi all'interno del nostro workspace,
+prima di tutto dobbiamo passare da terminale alla directory del nostro nuovo 
+workspace.
+
+cd mono-workspace
+
+Una volta nella directory del workspace, andremo a creare il progetto o 
+applicazione host (colei che nella porta 4200 ospiterà il codice d'intestazione
+dell'altra applicazione mfe)
+
+ ng g application host-app --routing --style=scss
+
+ Creata la prima applicazione, andremo a creare la seconda applicazione ovvero la mfe 
+(con porta server 4300, colei che avrà il codice d'intestazione front-end)
+
+ng g application mfe-app --routing --style=scss
+
+Prima di integrare il microfrontend, inizieremo ad avviare le applicazioni
+in questo modo:
+
+ng s host-app -o
+
+allo stesso modo con mfe:
+
+ng s mfe-app -o
+(in questo caso dato che la porta di default 4200, angular in maniera random
+assegnerà un'altra porta)
+
+Ora installeremo Webpack 5 mettendoci nella directory workspace per usufruire della funzionalità del Module Federation che
+per impostazione predefinita è il Webpack è costruito internamente.
+
+npm i webpack webpack-cli --save-dev
+
+Successivamente il nostro passo è aggiungere il Module Federation, specificando per quale application
+vogliamo aggiungerlo e specificando la porta del server(fare attenzione con le compatibilità).
+in questo modo:
+
+ng add @angular-architects/module-federation --project host-app --port 4200
+
+allo stesso modo aggiungeremo il Module Federation all'application mfe-app,
+cambiando solamente il numero di porta:
+
+ng add @angular-architects/module-federation --project mfe-app --port 4300
